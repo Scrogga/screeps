@@ -1,5 +1,5 @@
 var roleSpawns = {
-    run: function () {
+    run: function (curRoom) {
 
         //Set wanted creeps
         const wantedHarvesters = 2
@@ -39,13 +39,12 @@ var roleSpawns = {
             minerBody = [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE ,MOVE]
         }
         let sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
-        for (let index in sources) {
-            let role = 'harvester'
-            let sourceObj = sources[index];
-            let minersUsingThisSource = Object.keys(Game.creeps).filter(creepName => Game.creeps[creepName].memory.sourceId === sourceObj.id);
-            if (minersUsingThisSource.length < 1) {
+        for (let i in sources) {
+            let sourceObj = sources[i];
+            let minersOnSource = Object.keys(Game.creeps).filter(creepName => Game.creeps[creepName].memory.sourceId === sourceObj.id);
+            if (minersOnSource.length < 1) {
                 name = ('Harvester.' + Game.time)
-                Game.spawns['Spawn1'].spawnCreep(minerBody, name, { memory: {sourceId: sourceObj.id,role: role}})
+                Game.spawns['Spawn1'].spawnCreep(minerBody, name, { memory: {sourceId: sourceObj.id,role: 'harvester'}})
             }
         }
 

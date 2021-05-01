@@ -7,7 +7,7 @@ var roleExtensionFiller = require('role.extensionFiller')
 var roleBackup = require('role.backup')
 
 var mainRoles = {
-    run: function(){
+    run: function(curRoom){
         //Run role functions
         for(let name in Game.creeps){
             var creep = Game.creeps[name];
