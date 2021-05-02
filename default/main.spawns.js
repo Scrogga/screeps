@@ -1,12 +1,38 @@
 var roleSpawns = {
     run: function (curRoom) {
 
+        //Set spawner
+        let spawns = curRoom.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType === STRUCTURE_SPAWN);
+            }
+        });
+        let spawn
+        let spawnTrue = false;
+        if (spawns.length > 0) {
+            spawn = spawns[0];
+            spawnTrue = true;
+        }
+
+
         //Set wanted creeps
         const wantedHarvesters = 2
         const wantedExtensionFillers = 1
         const wantedConstructorLinks = 2
         let wantedConstructorStorages = 1
-        let wantedBuilders
+        let wantedBuilders = 0
+        let wantedClaimClaimers = 0
+        let wantedClaimBuilders = 0
+
+        let flagCapture = Game.flags['Capture']
+        if (flagCapture){
+            if (!flagCapture.room.controller.my){
+                wantedClaimClaimers = 1
+            }
+            if (!flagCapture.room.spawns){
+                wantedClaimBuilders = 1
+            }
+        }
 
         //Initialise Counts
         let harvesterCount = 0
@@ -14,6 +40,8 @@ var roleSpawns = {
         let constructorLinkCount = 0
         let builderCount = 0
         let extensionFillerCount = 0
+        let claimClaimerCount = 0
+        let claimBuilderCount = 0
 
         for (let creep in Game.creeps) {
             let creepRole = Memory.creeps[creep].role
@@ -22,10 +50,11 @@ var roleSpawns = {
             if (creepRole === 'constructorLink') {constructorLinkCount += 1;}
             if (creepRole === 'builder') {builderCount += 1;}
             if (creepRole === 'extensionFiller') {extensionFillerCount += 1;}
+            if (creepRole === 'claimClaimer') {claimClaimerCount += 1;}
+            if (creepRole === 'claimBuilder') {claimBuilderCount += 1;}
         }
 
-        let roomEnergy = Game.spawns['Spawn1'].room.energyAvailable
-        let name
+        let roomEnergy = curRoom.energyAvailable
 
         //Spawn miner if spare source
         let minerBody
@@ -38,13 +67,18 @@ var roleSpawns = {
         else {
             minerBody = [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE ,MOVE]
         }
-        let sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
-        for (let i in sources) {
-            let sourceObj = sources[i];
-            let minersOnSource = Object.keys(Game.creeps).filter(creepName => Game.creeps[creepName].memory.sourceId === sourceObj.id);
-            if (minersOnSource.length < 1) {
-                name = ('Harvester.' + Game.time)
-                Game.spawns['Spawn1'].spawnCreep(minerBody, name, { memory: {sourceId: sourceObj.id,role: 'harvester'}})
+        let sources
+        if (spawnTrue) {
+            sources = spawn.room.find(FIND_SOURCES);
+            if (sources.length > 0) {
+                for (let i in sources) {
+                    let sourceObj = sources[i];
+                    let minersOnSource = Object.keys(Game.creeps).filter(creepName => Game.creeps[creepName].memory.sourceId === sourceObj.id);
+                    if (minersOnSource.length < 1) {
+                        name = ('Harvester.' + Game.time)
+                        spawn.spawnCreep(minerBody, name, {memory: {sourceId: sourceObj.id, role: 'harvester'}})
+                    }
+                }
             }
         }
 
@@ -62,16 +96,21 @@ var roleSpawns = {
         if (extensionFillerCount < wantedExtensionFillers &&
             harvesterCount >= wantedHarvesters) {
             name = ('extensionFiller.' + Game.time)
-            Game.spawns['Spawn1'].spawnCreep(extensionFillerBody, name, {memory: {role: 'extensionFiller'}});
+            if (spawnTrue){
+                spawn.spawnCreep(extensionFillerBody, name, {memory: {role: 'extensionFiller'}});
+            }
         }
 
         //Spawn builders
-        let constructionSites = Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES);
-        if (constructionSites.length > 0) {
-            wantedBuilders = 1
-        }
-        else {
-            wantedBuilders = 0
+        let constructionSites
+        if (spawnTrue){
+            constructionSites = spawn.room.find(FIND_CONSTRUCTION_SITES);
+            if (constructionSites.length > 0) {
+                wantedBuilders = 1
+            }
+            else {
+                wantedBuilders = 0
+            }
         }
         let builderBody
         if (roomEnergy < 900) {
@@ -84,7 +123,9 @@ var roleSpawns = {
             harvesterCount >= wantedHarvesters &&
             extensionFillerCount >= wantedExtensionFillers) {
             name = ('Builder.' + Game.time)
-            Game.spawns['Spawn1'].spawnCreep(builderBody, name, {memory: {role: 'builder'}});
+            if (spawnTrue){
+                spawn.spawnCreep(builderBody, name, {memory: {role: 'builder'}});
+            }
         }
 
         //Spawn constructors
@@ -112,10 +153,11 @@ var roleSpawns = {
                 builderCount >= wantedBuilders &&
                 extensionFillerCount >= wantedExtensionFillers) {
                 name = ('ConstructorStorage.' + Game.time)
-                Game.spawns['Spawn1'].spawnCreep(constructorStorageBody, name, {memory: {role: 'constructorStorage'}});
+                if (spawnTrue){
+                    spawn.spawnCreep(constructorStorageBody, name, {memory: {role: 'constructorStorage'}});
+                }
             }
         }
-
         if (constructorLinkCount < wantedConstructorLinks &&
             roomEnergy >= 600 &&
             harvesterCount >= wantedHarvesters &&
@@ -123,8 +165,23 @@ var roleSpawns = {
             constructorStorageCount >= wantedConstructorStorages &&
             extensionFillerCount >= wantedExtensionFillers) {
             name = ('ConstructorLink.' + Game.time)
-            Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, WORK, CARRY, MOVE], name, {memory: {role: 'constructorLink'}});
-            Memory.creepCount.constructor2s += 1;
+            if (spawnTrue){
+                spawn.spawnCreep([WORK, WORK, WORK, WORK, WORK, CARRY, MOVE], name, {memory: {role: 'constructorLink'}});
+            }
+        }
+
+        //spawn room claimers
+        if (claimBuilderCount < wantedClaimBuilders &&
+            roomEnergy >= 1100){
+            if (spawnTrue){
+                spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], 'ClaimBuilder' + Game.time, { memory: { role: 'claimBuilder', targetFlag: 'Capture', mining: 'true'}});
+            }
+        }
+        if (claimClaimerCount < wantedClaimClaimers &&
+            roomEnergy >= 1400){
+            if (spawnTrue){
+                spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], 'ClaimBuilder' + Game.time, { memory: { role: 'claimBuilder', targetFlag: 'Capture', mining: 'true'}});
+            }
         }
     }
 };

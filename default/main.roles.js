@@ -2,7 +2,8 @@ var roleHarvester = require('role.harvester')
 var roleConstructorStorage = require('role.constructorStorage')
 var roleConstructorLink = require('role.constructorLink')
 var roleBuilder = require('role.builder')
-var roleCapturer = require('role.capturer')
+var roleClaimClaimer = require('role.claimClaimer')
+var roleClaimBuilders = require('role.claimBuilder')
 var roleExtensionFiller = require('role.extensionFiller')
 var roleBackup = require('role.backup')
 
@@ -15,9 +16,10 @@ var mainRoles = {
             if(creep.memory.role === 'constructorStorage') {roleConstructorStorage.run(creep);}
             if(creep.memory.role === 'constructorLink'){roleConstructorLink.run(creep);}
             if(creep.memory.role === 'builder'){roleBuilder.run(creep);}
-            if(creep.memory.role === 'capturer'){roleCapturer.run(creep);}
             if(creep.memory.role === 'extensionFiller'){roleExtensionFiller.run(creep);}
             if(creep.memory.role === 'backup'){roleBackup.run(creep);}
+            if(creep.memory.role === 'claimClaimer'){roleClaimClaimer.run(creep)}
+            if(creep.memory.role === 'claimBuilder'){roleClaimBuilders.run(creep)}
         }
     }
 };

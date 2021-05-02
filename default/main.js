@@ -9,7 +9,7 @@ module.exports.loop = function(){
 
     //List energy every 10 ticks
     if (Game.time % 50 === 0) {
-        console.log('Energy: ' + Game.spawns['Spawn1'].room.energyAvailable)
+        //console.log('Energy: ' + Game.spawns['Spawn1'].room.energyAvailable)
     }
 
     //Clear memory of dead creeps
@@ -19,18 +19,19 @@ module.exports.loop = function(){
         }
     }
     
-    //TODO Filter rooms for owned rooms
+    //Filter owned rooms
     for (i in Game.rooms){
         if(Game.rooms[i].controller.my === true){
             let curRoom = Game.rooms[i]
-        //Run creep spawning
-        mainSpawns.run(curRoom)
-        //Set creep roles
-        mainRoles.run(curRoom)
-        //Towers
-        mainTowers.run(curRoom)
-        //Links
-        mainLinks.run(curRoom)
+            //console.log(curRoom)
+            //Creep spawning
+            mainSpawns.run(curRoom)
+            //Creep roles
+            mainRoles.run(curRoom)
+            //Towers
+            mainTowers.run(curRoom)
+            //Links
+            mainLinks.run(curRoom)
         }
     }
 };
