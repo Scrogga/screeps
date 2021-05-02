@@ -1,6 +1,6 @@
 var roleSpawns = {
     run: function (curRoom) {
-
+        //console.log(curRoom)
         //Set spawner
         let spawns = curRoom.find(FIND_STRUCTURES, {
             filter: (structure) => {
@@ -8,31 +8,41 @@ var roleSpawns = {
             }
         });
         let spawn
-        let spawnTrue = false;
+        let spawnTrue = false
         if (spawns.length > 0) {
-            spawn = spawns[0];
-            spawnTrue = true;
+            spawn = spawns[0]
+            spawnTrue = true
         }
-
+        //console.log(spawn)
 
         //Set wanted creeps
-        const wantedHarvesters = 2
-        const wantedExtensionFillers = 1
-        const wantedConstructorLinks = 2
+        let wantedHarvesters = 2
+        let wantedExtensionFillers = 1
+        let wantedConstructorLinks = 2
         let wantedConstructorStorages = 1
         let wantedBuilders = 0
         let wantedClaimClaimers = 0
         let wantedClaimBuilders = 0
 
         let flagCapture = Game.flags['Capture']
+        let flagSpawns
+        if(flagCapture){
+            flagSpawns = flagCapture.room.find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType === STRUCTURE_SPAWN);
+                }
+            });
+        }
         if (flagCapture){
             if (!flagCapture.room.controller.my){
                 wantedClaimClaimers = 1
             }
-            if (!flagCapture.room.spawns){
-                wantedClaimBuilders = 1
+            if (flagSpawns = 0){
+                wantedClaimBuilders = 2
             }
         }
+        //console.log('wantedClaimClaimers:' + wantedClaimClaimers)
+        //console.log('wantedClaimBuilders:' + wantedClaimBuilders)
 
         //Initialise Counts
         let harvesterCount = 0
@@ -130,31 +140,33 @@ var roleSpawns = {
 
         //Spawn constructors
         let constructorStorageBody
-        let storageIndex = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType === STRUCTURE_STORAGE)}});
-        if(storageIndex.length > 0){
-            let storage = storageIndex[0]
-            if (storage.store[RESOURCE_ENERGY] < 100000 && roomEnergy >= 200){
-                constructorStorageBody = [WORK, CARRY, MOVE]
-            }
-            else if (storage.store[RESOURCE_ENERGY] < 500000 && roomEnergy >= 400){
-                constructorStorageBody = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
-            }
-            else if (storage.store[RESOURCE_ENERGY] > 500000 && roomEnergy >= 800){
-                constructorStorageBody = [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY , MOVE, MOVE, MOVE, MOVE]
-            }
-            else{
-                wantedConstructorStorages = 0
-            }
-            if (constructorStorageCount < wantedConstructorStorages &&
-                roomEnergy >= 400 &&
-                harvesterCount >= wantedHarvesters &&
-                builderCount >= wantedBuilders &&
-                extensionFillerCount >= wantedExtensionFillers) {
-                name = ('ConstructorStorage.' + Game.time)
-                if (spawnTrue){
-                    spawn.spawnCreep(constructorStorageBody, name, {memory: {role: 'constructorStorage'}});
+        if (spawnTrue){
+            let storageIndex = spawn.room.find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType === STRUCTURE_STORAGE)}});
+            if(storageIndex.length > 0){
+                let storage = storageIndex[0]
+                if (storage.store[RESOURCE_ENERGY] < 100000 && roomEnergy >= 200){
+                    constructorStorageBody = [WORK, CARRY, MOVE]
+                }
+                else if (storage.store[RESOURCE_ENERGY] < 500000 && roomEnergy >= 400){
+                    constructorStorageBody = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+                }
+                else if (storage.store[RESOURCE_ENERGY] > 500000 && roomEnergy >= 800){
+                    constructorStorageBody = [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY , MOVE, MOVE, MOVE, MOVE]
+                }
+                else{
+                    wantedConstructorStorages = 0
+                }
+                if (constructorStorageCount < wantedConstructorStorages &&
+                    roomEnergy >= 400 &&
+                    harvesterCount >= wantedHarvesters &&
+                    builderCount >= wantedBuilders &&
+                    extensionFillerCount >= wantedExtensionFillers) {
+                    name = ('ConstructorStorage.' + Game.time)
+                    if (spawnTrue){
+                        spawn.spawnCreep(constructorStorageBody, name, {memory: {role: 'constructorStorage'}});
+                    }
                 }
             }
         }
