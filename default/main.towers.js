@@ -10,7 +10,7 @@ var mainTowers = {
                 let tower = myTowers[i]
                 let closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => (structure.hits < structure.hitsMax) &&
-                        (structure.hits <= 750000)
+                        (structure.hits <= 1000000)
                 });
                 if(closestDamagedStructure){
                     tower.repair(closestDamagedStructure);

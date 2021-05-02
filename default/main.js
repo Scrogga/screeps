@@ -21,7 +21,8 @@ module.exports.loop = function(){
     
     //TODO Filter rooms for owned rooms
     for (i in Game.rooms){
-        let curRoom = Game.rooms[i]
+        if(Game.rooms[i].controller.my === true){
+            let curRoom = Game.rooms[i]
         //Run creep spawning
         mainSpawns.run(curRoom)
         //Set creep roles
@@ -30,5 +31,7 @@ module.exports.loop = function(){
         mainTowers.run(curRoom)
         //Links
         mainLinks.run(curRoom)
+        }
     }
 };
+
