@@ -10,6 +10,7 @@ console.log('Initialising')
 
 module.exports.loop = function(){
 
+    console.log('---------------------------')
     //List energy every 10 ticks
     if (Game.time % 50 === 0) {
         //console.log('Energy: ' + Game.spawns['Spawn1'].room.energyAvailable)
@@ -28,7 +29,7 @@ module.exports.loop = function(){
             if (Game.rooms[i].controller.my) {
                 let curRoom = Game.rooms[i]
                 //console.log(curRoom)
-                if (curRoom.controller.level > 2){
+                if (curRoom.controller.level > 3){
                     //Creep spawning
                     mainSpawns.run(curRoom)
                     //Creep roles
@@ -41,6 +42,8 @@ module.exports.loop = function(){
                 else{
                     mainSpawnsRCL3.run(curRoom)
                     mainRolesRCL3.run(curRoom)
+                    mainTowers.run(curRoom)
+                    mainLinks.run(curRoom)
                 }
             }
         }

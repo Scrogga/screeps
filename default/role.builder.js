@@ -9,12 +9,28 @@ var roleBuilder = {
             }
         }
         else if(creep.store.getFreeCapacity() > 0) {
-            let containers = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {
+            let containers = creep.room.find(FIND_STRUCTURES, {
                 filter: { structureType: STRUCTURE_STORAGE }
             });
             if(containers.length > 0){
                 if (creep.withdraw(containers[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(containers[0]);
+                }
+            }
+            else {
+                let spawns = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType === STRUCTURE_SPAWN) &&
+                            (structure.store[RESOURCE_ENERGY] > 250 );
+                    }
+                });
+                if (spawns.length > 0) {
+                    if (creep.withdraw(spawns[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                        creep.moveTo(spawns[0]);
+                    }
+                }
+                else{
+                    creep.say('Waiting')
                 }
             }
         }
