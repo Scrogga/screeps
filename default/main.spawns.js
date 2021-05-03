@@ -18,7 +18,7 @@ var roleSpawns = {
 
         //Set wanted creeps
         let wantedHarvesters = curRoom.find(FIND_SOURCES).length
-        console.log(curRoom + ' wanted harvesters: ' + wantedHarvesters)
+        //console.log(curRoom + ' wanted harvesters: ' + wantedHarvesters)
         let wantedExtensionFillers = 1
         let wantedConstructorLinks = 0
         let wantedConstructorStorages = 1
@@ -26,25 +26,23 @@ var roleSpawns = {
         let wantedClaimClaimers = 0
         let wantedClaimBuilders = 0
 
-        let flagCapture = Game.flags['Capture']
+        let flagCapture = Game.flags['Capture'];
         let flagSpawns
-        if(flagCapture){
+
+        if (flagCapture){
             flagSpawns = flagCapture.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType === STRUCTURE_SPAWN);
-                }
-            });
-        }
-        if (flagCapture){
-            if (!flagCapture.room.controller.my){
+                    return (structure.structureType === STRUCTURE_SPAWN);}});
+            if (!flagCapture.room.controller.my) {
                 wantedClaimClaimers = 1
             }
-            if (flagSpawns.length === 0){
+            if (flagSpawns.length < 1){
                 wantedClaimBuilders = 2
             }
         }
-        //console.log('wantedClaimClaimers:' + wantedClaimClaimers)
-        //console.log('wantedClaimBuilders:' + wantedClaimBuilders)
+
+        console.log('wantedClaimClaimers:' + wantedClaimClaimers)
+        console.log('wantedClaimBuilders:' + wantedClaimBuilders)
 
         //Initialise Counts
         let claimClaimerCount = 0
@@ -170,7 +168,7 @@ var roleSpawns = {
                 else{
                     wantedConstructorStorages = 0
                 }
-                console.log(curRoom + ' wanted storage constructers: ' + wantedConstructorStorages)
+                //console.log(curRoom + ' wanted storage constructers: ' + wantedConstructorStorages)
                 if (constructorStorageCount < wantedConstructorStorages &&
                     roomEnergy >= 400 &&
                     harvesterCount >= wantedHarvesters &&
@@ -189,7 +187,7 @@ var roleSpawns = {
         if(linkIndex.length > 0){
             wantedConstructorLinks = 2
         }
-        console.log(curRoom + ' wanted link constructers: ' + wantedConstructorLinks)
+        //console.log(curRoom + ' wanted link constructers: ' + wantedConstructorLinks)
         if (constructorLinkCount < wantedConstructorLinks &&
             roomEnergy >= 600 &&
             harvesterCount >= wantedHarvesters &&
@@ -212,7 +210,7 @@ var roleSpawns = {
         if (claimClaimerCount < wantedClaimClaimers &&
             roomEnergy >= 1400){
             if (spawnTrue){
-                spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], 'ClaimBuilder' + Game.time, { memory: { role: 'claimBuilder', targetFlag: 'Capture', mining: 'true'}});
+                spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], 'ClaimClaimer' + Game.time, { memory: { role: 'claimClaimer', targetFlag: 'Capture', mining: 'true'}});
             }
         }
     }

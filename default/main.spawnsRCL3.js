@@ -20,7 +20,10 @@ var roleSpawns = {
         let sources
         if (spawnTrue) {
             let minerBody
-            if (roomEnergy >= 500){
+            if (roomEnergy >= 900){
+                minerBody = [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]
+            }
+            else if (roomEnergy >= 400){
                 minerBody = [WORK,WORK,CARRY,MOVE,MOVE,MOVE];
             }
             else {
@@ -32,7 +35,7 @@ var roleSpawns = {
                     let sourceObj = sources[i];
                     let minersOnSource = Object.keys(Game.creeps).filter(creepName => Game.creeps[creepName].memory.sourceId === sourceObj.id);
                     if (minersOnSource.length < 2) {
-                        name = ('HarvesterRCL3.' + Game.time)
+                        let name = ('HarvesterRCL3.' + Game.time)
                         spawn.spawnCreep(minerBody, name, {memory: {sourceId: sourceObj.id, role: 'harvesterRCL3'}})
                     }
                 }

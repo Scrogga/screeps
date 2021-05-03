@@ -28,8 +28,10 @@ module.exports.loop = function(){
         if(Game.rooms[i].controller) {
             if (Game.rooms[i].controller.my) {
                 let curRoom = Game.rooms[i]
-                //console.log(curRoom)
-                if (curRoom.controller.level > 3){
+                let hasStorage = curRoom.find(FIND_STRUCTURES, {
+                    filter: { structureType: STRUCTURE_STORAGE }
+                });
+                if (hasStorage.length > 0){
                     //Creep spawning
                     mainSpawns.run(curRoom)
                     //Creep roles
