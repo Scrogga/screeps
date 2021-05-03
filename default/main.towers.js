@@ -15,7 +15,11 @@ var mainTowers = {
                 if(closestDamagedStructure){
                     tower.repair(closestDamagedStructure);
                 }
-                let closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+                const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
+                    filter: function(object) {
+                        return object.getActiveBodyparts(ATTACK) === 0;
+                    }
+                });
                 if(closestHostile){
                     tower.attack(closestHostile);
                 }

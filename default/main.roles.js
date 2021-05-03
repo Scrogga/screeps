@@ -5,13 +5,12 @@ var roleBuilder = require('role.builder')
 var roleClaimClaimer = require('role.claimClaimer')
 var roleClaimBuilders = require('role.claimBuilder')
 var roleExtensionFiller = require('role.extensionFiller')
-var roleBackup = require('role.backup')
 
 var mainRoles = {
-    run: function(curRoom){
+    run: function(){
         //Run role functions
-        for(let name in Game.creeps){
-            var creep = Game.creeps[name];
+        for(let i in Game.creeps){
+            let creep = Game.creeps[i];
             if(creep.memory.role === 'harvester'){roleHarvester.run(creep);}
             if(creep.memory.role === 'constructorStorage') {roleConstructorStorage.run(creep);}
             if(creep.memory.role === 'constructorLink'){roleConstructorLink.run(creep);}

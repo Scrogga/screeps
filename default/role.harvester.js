@@ -7,7 +7,6 @@ var roleHarvester = {
             creep.memory.mining = true
         }
         if(creep.memory.mining) {
-            //console.log(creep.memory.sourceId)
             let sourceTarget = Game.getObjectById(creep.memory.sourceId)
             if(creep.harvest(sourceTarget) === ERR_NOT_IN_RANGE){
                 creep.moveTo(sourceTarget, {visualizePathStyle: {stroke: '#ffaa00'}});

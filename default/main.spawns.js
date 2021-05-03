@@ -1,6 +1,5 @@
 var roleSpawns = {
     run: function (curRoom) {
-        //console.log(curRoom)
         //Set spawner
         let spawns = curRoom.find(FIND_STRUCTURES, {
             filter: (structure) => {
@@ -14,11 +13,9 @@ var roleSpawns = {
             spawn = spawns[0]
             spawnTrue = true
         }
-        //console.log(spawn)
 
         //Set wanted creeps
         let wantedHarvesters = curRoom.find(FIND_SOURCES).length
-        //console.log(curRoom + ' wanted harvesters: ' + wantedHarvesters)
         let wantedExtensionFillers = 1
         let wantedConstructorLinks = 0
         let wantedConstructorStorages = 1
@@ -29,7 +26,10 @@ var roleSpawns = {
         let flagCapture = Game.flags['Capture'];
         let flagSpawns
 
-        if (flagCapture){
+        if (flagCapture.room === undefined){
+            wantedClaimClaimers = 1
+        }
+        else {
             flagSpawns = flagCapture.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType === STRUCTURE_SPAWN);}});
@@ -40,10 +40,6 @@ var roleSpawns = {
                 wantedClaimBuilders = 2
             }
         }
-
-        console.log('wantedClaimClaimers:' + wantedClaimClaimers)
-        console.log('wantedClaimBuilders:' + wantedClaimBuilders)
-
         //Initialise Counts
         let claimClaimerCount = 0
         let claimBuilderCount = 0
@@ -55,15 +51,10 @@ var roleSpawns = {
         let extensionFillerCount = curRoom.find(FIND_CREEPS, {filter: function(object) {return object.memory.role === 'extensionFiller'}});
 
         harvesterCount = harvesterCount.length
-        //console.log('harv'+harvesterCount)
         constructorStorageCount = constructorStorageCount.length
-        //console.log('const store'+constructorStorageCount)
         constructorLinkCount = constructorLinkCount.length
-        //console.log('const link'+constructorLinkCount)
         builderCount = builderCount.length
-        //console.log('builder'+builderCount)
         extensionFillerCount = extensionFillerCount.length
-        //console.log('ext'+extensionFillerCount)
 
         for (let creep in Game.creeps) {
             let creepRole = Memory.creeps[creep].role
@@ -79,14 +70,14 @@ var roleSpawns = {
 
         //Spawn miner if spare source
         let minerBody
-        if (roomEnergy < 700) {
-            minerBody = [WORK, CARRY, MOVE]
+        if (roomEnergy >= 900){
+            minerBody = [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]
         }
-        else if (roomEnergy < 1600){
-            minerBody = [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE]
+        else if (roomEnergy >= 400){
+            minerBody = [WORK,WORK,CARRY,MOVE,MOVE,MOVE];
         }
         else {
-            minerBody = [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE ,MOVE]
+            minerBody = [WORK,CARRY,MOVE];
         }
         let sources
         if (spawnTrue) {
@@ -114,7 +105,8 @@ var roleSpawns = {
         else{
             extensionFillerBody = [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE , MOVE, MOVE, MOVE, MOVE]
         }
-        if (extensionFillerCount < wantedExtensionFillers) {
+        if (extensionFillerCount < wantedExtensionFillers &&
+            harvesterCount >= wantedHarvesters) {
             name = ('extensionFiller.' + Game.time)
             if (spawnTrue){
                 spawn.spawnCreep(extensionFillerBody, name, {memory: {role: 'extensionFiller'}});
@@ -168,7 +160,6 @@ var roleSpawns = {
                 else{
                     wantedConstructorStorages = 0
                 }
-                //console.log(curRoom + ' wanted storage constructers: ' + wantedConstructorStorages)
                 if (constructorStorageCount < wantedConstructorStorages &&
                     roomEnergy >= 400 &&
                     harvesterCount >= wantedHarvesters &&
@@ -187,7 +178,6 @@ var roleSpawns = {
         if(linkIndex.length > 0){
             wantedConstructorLinks = 2
         }
-        //console.log(curRoom + ' wanted link constructers: ' + wantedConstructorLinks)
         if (constructorLinkCount < wantedConstructorLinks &&
             roomEnergy >= 600 &&
             harvesterCount >= wantedHarvesters &&

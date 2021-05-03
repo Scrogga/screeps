@@ -7,7 +7,7 @@ var roleConstructorStorage = {
             }
         }
         else {
-            let containers = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {
+            let containers = creep.room.find(FIND_STRUCTURES, {
                 filter: { structureType: STRUCTURE_STORAGE }
             });
             if(containers.length > 0){

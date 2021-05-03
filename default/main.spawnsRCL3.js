@@ -1,6 +1,5 @@
 var roleSpawns = {
     run: function (curRoom) {
-        //console.log(curRoom)
         //Set spawner
         let spawns = curRoom.find(FIND_STRUCTURES, {
             filter: (structure) => {
@@ -34,7 +33,7 @@ var roleSpawns = {
                 for (let i in sources) {
                     let sourceObj = sources[i];
                     let minersOnSource = Object.keys(Game.creeps).filter(creepName => Game.creeps[creepName].memory.sourceId === sourceObj.id);
-                    if (minersOnSource.length < 2) {
+                    if (minersOnSource.length < 3) {
                         let name = ('HarvesterRCL3.' + Game.time)
                         spawn.spawnCreep(minerBody, name, {memory: {sourceId: sourceObj.id, role: 'harvesterRCL3'}})
                     }

@@ -10,12 +10,6 @@ console.log('Initialising')
 
 module.exports.loop = function(){
 
-    console.log('---------------------------')
-    //List energy every 10 ticks
-    if (Game.time % 50 === 0) {
-        //console.log('Energy: ' + Game.spawns['Spawn1'].room.energyAvailable)
-    }
-
     //Clear memory of dead creeps
     for(let name in Memory.creeps) {
         if(!Game.creeps[name]) {
@@ -31,21 +25,20 @@ module.exports.loop = function(){
                 let hasStorage = curRoom.find(FIND_STRUCTURES, {
                     filter: { structureType: STRUCTURE_STORAGE }
                 });
+                //Room energy
+                if (Game.time % 50 === 0) {
+                    console.log('-------')
+                    console.log('Room: ' + curRoom + ' Energy: ' + curRoom.energyAvailable)
+                }
+                mainTowers.run(curRoom)
+                mainLinks.run(curRoom)
                 if (hasStorage.length > 0){
-                    //Creep spawning
                     mainSpawns.run(curRoom)
-                    //Creep roles
                     mainRoles.run(curRoom)
-                    //Towers
-                    mainTowers.run(curRoom)
-                    //Links
-                    mainLinks.run(curRoom)
                 }
                 else{
                     mainSpawnsRCL3.run(curRoom)
                     mainRolesRCL3.run(curRoom)
-                    mainTowers.run(curRoom)
-                    mainLinks.run(curRoom)
                 }
             }
         }

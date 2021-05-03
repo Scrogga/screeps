@@ -7,10 +7,11 @@ var roleConstructorLink = {
             }
         }
         else {
-            let container = Game.getObjectById('9e20478debe921a')
-            if(container){
-                if (creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(container);
+            let link = creep.room.controller.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: {structureType: STRUCTURE_LINK }});
+            if(link){
+                if (creep.withdraw(link, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                    creep.moveTo(link);
                 }
             }
         }
