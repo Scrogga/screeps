@@ -24,22 +24,26 @@ var roleSpawns = {
         let wantedClaimBuilders = 0
 
         let flagCapture = Game.flags['Capture'];
-        let flagSpawns
 
-        if (flagCapture.room === undefined){
-            wantedClaimClaimers = 1
-        }
-        else {
-            flagSpawns = flagCapture.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType === STRUCTURE_SPAWN);}});
-            if (!flagCapture.room.controller.my) {
+        if (flagCapture) {
+            if (flagCapture.room) {
+                let flagSpawns = flagCapture.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType === STRUCTURE_SPAWN);
+                    }
+                });
+                if (!flagCapture.room.controller.my) {
+                    wantedClaimClaimers = 1
+                }
+                if (flagSpawns.length < 1) {
+                    wantedClaimBuilders = 2
+                }
+            }
+            else{
                 wantedClaimClaimers = 1
             }
-            if (flagSpawns.length < 1){
-                wantedClaimBuilders = 2
-            }
         }
+
         //Initialise Counts
         let claimClaimerCount = 0
         let claimBuilderCount = 0
@@ -107,7 +111,7 @@ var roleSpawns = {
         }
         if (extensionFillerCount < wantedExtensionFillers &&
             harvesterCount >= wantedHarvesters) {
-            name = ('extensionFiller.' + Game.time)
+            name = ('ExtensionFiller.' + Game.time)
             if (spawnTrue){
                 spawn.spawnCreep(extensionFillerBody, name, {memory: {role: 'extensionFiller'}});
             }
@@ -192,15 +196,15 @@ var roleSpawns = {
 
         //spawn room claimers
         if (claimBuilderCount < wantedClaimBuilders &&
-            roomEnergy >= 1100){
+            roomEnergy >= 1800){
             if (spawnTrue){
-                spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], 'ClaimBuilder' + Game.time, { memory: { role: 'claimBuilder', targetFlag: 'Capture', mining: 'true'}});
+                Game.spawns['Spawn3'].spawnCreep( [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,CARRY,CARRY], 'ClaimBuilder' + Game.time, { memory: { role: 'claimBuilder', targetFlag: 'Capture', mining: 'true'}});
             }
         }
         if (claimClaimerCount < wantedClaimClaimers &&
-            roomEnergy >= 1400){
+            roomEnergy >= 1800){
             if (spawnTrue){
-                spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,CLAIM,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE], 'ClaimClaimer' + Game.time, { memory: { role: 'claimClaimer', targetFlag: 'Capture', mining: 'true'}});
+                spawn.spawnCreep( [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CLAIM], 'ClaimClaimer' + Game.time, { memory: { role: 'claimClaimer', targetFlag: 'Capture', mining: 'true'}});
             }
         }
     }

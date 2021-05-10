@@ -13,7 +13,7 @@ var roleHarvester = {
             }
         }
         else if (!creep.memory.mining){
-            let link = creep.pos.findInRange(FIND_STRUCTURES, 3,
+            let link = creep.pos.findInRange(FIND_STRUCTURES, 2,
                 {filter: { structureType: STRUCTURE_LINK}});
             if(link.length > 0) {
                 if (creep.transfer(link[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {

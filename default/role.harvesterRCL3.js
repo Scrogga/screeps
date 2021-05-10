@@ -51,29 +51,17 @@ var roleharvesterRCL3 = {
                             if (creep.transfer(towers[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                                 creep.moveTo(towers[0], {visualizePathStyle: {stroke: '#ffffff'}});
                             }
-                        } else {
-                            let targets = creep.room.find(FIND_STRUCTURES, {
-                                filter: (structure) => {
-                                    return (structure.structureType === STRUCTURE_STORAGE) &&
-                                        (structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
-                                }
-                            });
-                            if (targets.length > 0) {
-                                if (creep.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                        } 
+                        else{
+                            const site = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+                            if (site){
+                                if (creep.build(site) === ERR_NOT_IN_RANGE){
+                                    creep.moveTo(site, {visualizePathStyle: {stroke: '#ffffff'}});
                                 }
                             }
-                            else{
-                                const site = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-                                if (site){
-                                    if (creep.build(site) === ERR_NOT_IN_RANGE){
-                                        creep.moveTo(site, {visualizePathStyle: {stroke: '#ffffff'}});
-                                    }
-                                }
-                                else {
-                                    if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE) {
-                                        creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}})
-                                    }
+                            else {
+                                if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE) {
+                                    creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}})
                                 }
                             }
                         }

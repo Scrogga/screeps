@@ -5,6 +5,7 @@ var roleBuilder = require('role.builder')
 var roleClaimClaimer = require('role.claimClaimer')
 var roleClaimBuilders = require('role.claimBuilder')
 var roleExtensionFiller = require('role.extensionFiller')
+var roleAttackRemote = require('role.attackRemote')
 
 var mainRoles = {
     run: function(){
@@ -19,6 +20,7 @@ var mainRoles = {
             if(creep.memory.role === 'backup'){roleBackup.run(creep);}
             if(creep.memory.role === 'claimClaimer'){roleClaimClaimer.run(creep)}
             if(creep.memory.role === 'claimBuilder'){roleClaimBuilders.run(creep)}
+            if(creep.memory.role === 'attackRemote'){roleAttackRemote.run(creep)}
         }
     }
 };

@@ -10,7 +10,10 @@ var roleBuilder = {
         }
         else if(creep.store.getFreeCapacity() > 0) {
             let containers = creep.room.find(FIND_STRUCTURES, {
-                filter: { structureType: STRUCTURE_STORAGE }
+                filter: (structure) => { 
+                    return (structure.structureType === STRUCTURE_STORAGE) &&
+                    (structure.store[RESOURCE_ENERGY] > 250);
+                }
             });
             if(containers.length > 0){
                 if (creep.withdraw(containers[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {

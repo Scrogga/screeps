@@ -27,7 +27,7 @@ var roleExtensionFiller = {
             }
         }
         else {
-            if (creep.room.controller.ticksToDowngrade < 10000){
+            if (creep.room.controller.ticksToDowngrade < 2000){
                 if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE){
                     creep.moveTo(creep.room.controller)
                 }

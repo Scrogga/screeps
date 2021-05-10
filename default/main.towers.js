@@ -12,17 +12,14 @@ var mainTowers = {
                     filter: (structure) => (structure.hits < structure.hitsMax) &&
                         (structure.hits <= 1000000)
                 });
-                if(closestDamagedStructure){
-                    tower.repair(closestDamagedStructure);
-                }
-                const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
-                    filter: function(object) {
-                        return object.getActiveBodyparts(ATTACK) === 0;
-                    }
-                });
+                const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS)
                 if(closestHostile){
                     tower.attack(closestHostile);
                 }
+                else if(closestDamagedStructure){
+                    tower.repair(closestDamagedStructure);
+                }
+                
             }
         }
     }
